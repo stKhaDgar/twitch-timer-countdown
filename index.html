@@ -1,41 +1,73 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>OBS Clock</title>
+  <title>Timer</title>
   <style>
-    body {
-      margin: 0;
-      background: transparent;
-      color: red;
+body {
+      background: black;
+      color: white;
       font-family: 'Roboto', sans-serif;
-      font-size: 48px;
+      font-size: 24px;
       font-weight: bold;
       display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
     }
-  </style>
+.title {
+padding-bottom: 4px;
+color: #a1a1a1;
+      font-family: 'Roboto', sans-serif;
+      font-size: 16px;
+      font-weight: bold;
+      display: flex;
+}
+#row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+</style>
 </head>
 <body>
-  <div id="clock"></div>
+  <div id="row" style="display: flex; align-items: stretch; gap: 10px">
+    <div class="col">
+      <div class="title">Прошло</div>
+      <div id="elapsed"></div>
+    </div>
+      <div style="width: 1px; margin-top: 8px; margin-bottom: 8px; background: #6b6b6b;"></div> <!-- вертикальная линия -->
+
+    <div class="col">
+      <div class="title">Осталось</div>
+      <div id="remaining"></div>
+    </div>
+  </div>
 
   <script>
-    function updateClock() {
-      const now = new Date();
-      const hours = String(now.getHours()).padStart(2, '0');
-      const minutes = String(now.getMinutes()).padStart(2, '0');
-      const seconds = String(now.getSeconds()).padStart(2, '0');
-      document.getElementById('clock').textContent = `${hours}:${minutes}:${seconds}`;
+    // Общее время (72 часа)
+    const totalSeconds = 72 * 3600;
+    const startTime = Date.now();
+
+    function format(sec) {
+      const h = String(Math.floor(sec / 3600)).padStart(2, '0');
+      const m = String(Math.floor((sec % 3600) / 60)).padStart(2, '0');
+      const s = String(sec % 60).padStart(2, '0');
+      return `${h}:${m}:${s}`;
     }
 
-    setInterval(updateClock, 1000);
-    updateClock();
+    function update() {
+      const elapsed = Math.floor((Date.now() - startTime) / 1000);
+      const remaining = Math.max(totalSeconds - elapsed, 0);
+      document.getElementById('elapsed').textContent = format(elapsed);
+      document.getElementById('remaining').textContent = format(remaining);
+    }
+
+    update();
+    setInterval(update, 1000);
   </script>
 </body>
 </html>
-
-
-
